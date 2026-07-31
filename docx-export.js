@@ -17,11 +17,11 @@ const DocxExport = {
 
     const H1 = (t) => new Paragraph({
       spacing: { before: 360, after: 180 },
-      children: [new TextRun({ text: t, bold: true, size: 30, color: "0F6E56", font: "Microsoft JhengHei" })]
+      children: [new TextRun({ text: t, bold: true, size: 30, color: "9E2B25", font: "Microsoft JhengHei" })]
     });
     const H2 = (t) => new Paragraph({
       spacing: { before: 260, after: 120 },
-      children: [new TextRun({ text: t, bold: true, size: 24, color: "185FA5", font: "Microsoft JhengHei" })]
+      children: [new TextRun({ text: t, bold: true, size: 24, color: "9C6B1E", font: "Microsoft JhengHei" })]
     });
     const P = (t) => new Paragraph({
       spacing: { before: 60, after: 120 }, alignment: AlignmentType.JUSTIFIED,
@@ -36,9 +36,9 @@ const DocxExport = {
 
     // ── 封面 ──
     children.push(new Paragraph({ spacing: { before: 2400, after: 200 }, alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: co.name || "公司名稱", size: 40, bold: true, color: "0F6E56", font: "Microsoft JhengHei" })] }));
+      children: [new TextRun({ text: co.name || "公司名稱", size: 40, bold: true, color: "9E2B25", font: "Microsoft JhengHei" })] }));
     children.push(new Paragraph({ spacing: { after: 120 }, alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: `${co.year || ""}年度`, size: 32, color: "185FA5", font: "Microsoft JhengHei" })] }));
+      children: [new TextRun({ text: `${co.year || ""}年度`, size: 32, color: "9C6B1E", font: "Microsoft JhengHei" })] }));
     children.push(new Paragraph({ spacing: { after: 600 }, alignment: AlignmentType.CENTER,
       children: [new TextRun({ text: "氣候相關財務揭露永續資訊報告書", size: 36, bold: true, font: "Microsoft JhengHei" })] }));
     children.push(new Paragraph({ alignment: AlignmentType.CENTER,
@@ -116,7 +116,7 @@ const DocxExport = {
 
     const cell = (text, opts = {}) => new TableCell({
       borders: bdrs, width: { size: opts.w || 3000, type: WidthType.DXA },
-      shading: opts.head ? { fill: "0F6E56", type: ShadingType.CLEAR } : (opts.alt ? { fill: "E1F5EE", type: ShadingType.CLEAR } : undefined),
+      shading: opts.head ? { fill: "9E2B25", type: ShadingType.CLEAR } : (opts.alt ? { fill: "F6E7E5", type: ShadingType.CLEAR } : undefined),
       margins: { top: 60, bottom: 60, left: 100, right: 100 },
       children: [new Paragraph({ children: [new TextRun({ text: String(text), size: 20, bold: !!opts.head, color: opts.head ? "FFFFFF" : "000000", font: "Microsoft JhengHei" })] })]
     });
@@ -141,7 +141,7 @@ const DocxExport = {
 
     const cell = (text, opts = {}) => new TableCell({
       borders: bdrs, width: { size: opts.w || 3000, type: WidthType.DXA },
-      shading: opts.head ? { fill: "BA7517", type: ShadingType.CLEAR } : (opts.alt ? { fill: "FAEEDA", type: ShadingType.CLEAR } : undefined),
+      shading: opts.head ? { fill: "9C6B1E", type: ShadingType.CLEAR } : (opts.alt ? { fill: "F5EBD9", type: ShadingType.CLEAR } : undefined),
       margins: { top: 60, bottom: 60, left: 100, right: 100 },
       children: [new Paragraph({ children: [new TextRun({ text: String(text), size: 20, bold: !!opts.head, color: opts.head ? "FFFFFF" : "000000", font: "Microsoft JhengHei" })] })]
     });

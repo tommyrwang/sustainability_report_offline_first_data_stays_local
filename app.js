@@ -69,7 +69,7 @@ const App = {
     const badge = document.getElementById('online-status');
     if (badge) {
       badge.textContent = status ? this.t('online') : this.t('offline');
-      badge.style.color = status ? '#1D9E75' : '#BA7517';
+      badge.style.color = status ? '#B8342D' : '#9C6B1E';
     }
     document.querySelectorAll('.gen-btn-label').forEach(el => {
       el.textContent = status ? this.t('btn_generate_ai') : this.t('btn_generate_offline');
@@ -380,7 +380,7 @@ const App = {
         if (item.status === 'pass') pass++; else if (item.status === 'warn') warn++; else fail++;
         list.innerHTML += `<div class="compliance-item ${item.status}">
           <div class="compliance-label">${item.label}<span class="status-dot ${item.status}"></span></div>
-          <div class="compliance-desc">${item.desc} · <span style="color:#0F6E56">${item.req}</span></div></div>`;
+          <div class="compliance-desc">${item.desc} · <span style="color:#9E2B25">${item.req}</span></div></div>`;
       });
     }
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
@@ -413,7 +413,7 @@ const App = {
     const status = document.getElementById('export-status');
     if (status) {
       status.textContent = result.success ? '✓ Word 檔已下載' : '✗ 匯出失敗：' + result.error;
-      status.style.color = result.success ? '#1D9E75' : '#A32D2D';
+      status.style.color = result.success ? '#B8342D' : '#9E2B25';
     }
   },
 
@@ -498,9 +498,9 @@ function updateScopeChart() {
   if (total === 0) { el.textContent = '輸入數據後自動更新'; return; }
   const pct = (v) => total > 0 ? Math.round(v / total * 100) : 0;
   el.innerHTML = `
-    <div class="scope-bar"><div class="scope-label"><span>範疇一</span><span>${s1.toLocaleString()} 公噸（${pct(s1)}%）</span></div><div class="scope-track"><div class="scope-fill" style="width:${pct(s1)}%;background:#1D9E75"></div></div></div>
-    <div class="scope-bar"><div class="scope-label"><span>範疇二</span><span>${s2.toLocaleString()} 公噸（${pct(s2)}%）</span></div><div class="scope-track"><div class="scope-fill" style="width:${pct(s2)}%;background:#378ADD"></div></div></div>
-    <div class="scope-bar"><div class="scope-label"><span>範疇三</span><span>${s3.toLocaleString()} 公噸（${pct(s3)}%）</span></div><div class="scope-track"><div class="scope-fill" style="width:${pct(s3)}%;background:#BA7517"></div></div></div>
+    <div class="scope-bar"><div class="scope-label"><span>範疇一</span><span>${s1.toLocaleString()} 公噸（${pct(s1)}%）</span></div><div class="scope-track"><div class="scope-fill" style="width:${pct(s1)}%;background:#B8342D"></div></div></div>
+    <div class="scope-bar"><div class="scope-label"><span>範疇二</span><span>${s2.toLocaleString()} 公噸（${pct(s2)}%）</span></div><div class="scope-track"><div class="scope-fill" style="width:${pct(s2)}%;background:#C8A23C"></div></div></div>
+    <div class="scope-bar"><div class="scope-label"><span>範疇三</span><span>${s3.toLocaleString()} 公噸（${pct(s3)}%）</span></div><div class="scope-track"><div class="scope-fill" style="width:${pct(s3)}%;background:#9C6B1E"></div></div></div>
     <div style="font-size:12px;color:var(--muted);margin-top:8px">總排放量：${total.toLocaleString()} 公噸 CO₂e</div>`;
 }
 
@@ -508,9 +508,9 @@ function updateTimeline() {
   const cap = parseFloat(document.getElementById('co-capital')?.value) || 0;
   const el = document.getElementById('timeline-auto');
   if (!el) return;
-  if (cap >= 100) el.innerHTML = '<strong style="color:#A32D2D">第一階段</strong>：2026 年會計年度強制適用，年報須於 <strong>2027 年 3 月 16 日</strong>前公告。首年可豁免 Scope 3。';
-  else if (cap >= 50) el.innerHTML = '<strong style="color:#BA7517">第二階段</strong>：2027 年會計年度強制適用，年報於 <strong>2028 年 3 月 16 日</strong>前公告。';
-  else if (cap > 0) el.innerHTML = '<strong style="color:#185FA5">第三階段</strong>：2028 年會計年度強制適用，年報於 <strong>2029 年 3 月 16 日</strong>前公告。';
+  if (cap >= 100) el.innerHTML = '<strong style="color:#9E2B25">第一階段</strong>：2026 年會計年度強制適用，年報須於 <strong>2027 年 3 月 16 日</strong>前公告。首年可豁免 Scope 3。';
+  else if (cap >= 50) el.innerHTML = '<strong style="color:#9C6B1E">第二階段</strong>：2027 年會計年度強制適用，年報於 <strong>2028 年 3 月 16 日</strong>前公告。';
+  else if (cap > 0) el.innerHTML = '<strong style="color:#9C6B1E">第三階段</strong>：2028 年會計年度強制適用，年報於 <strong>2029 年 3 月 16 日</strong>前公告。';
   else el.textContent = '填寫實收資本額後自動判斷適用時程';
 }
 
