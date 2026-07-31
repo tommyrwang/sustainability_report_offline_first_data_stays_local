@@ -1,0 +1,81 @@
+// ══════════════════════════════════════════════════════════
+// 引用來源與雙語字典模組
+// ══════════════════════════════════════════════════════════
+
+// ── 引用來源清單（法規、準則、工作坊）──
+const References = {
+  standards: [
+    { zh: 'IFRS S1《永續相關財務資訊揭露之一般規定》', en: 'IFRS S1 General Requirements for Disclosure of Sustainability-related Financial Information', org: 'ISSB, 2023' },
+    { zh: 'IFRS S2《氣候相關揭露》', en: 'IFRS S2 Climate-related Disclosures', org: 'ISSB, 2023' },
+    { zh: 'TCFD 氣候相關財務揭露建議', en: 'TCFD Recommendations', org: 'FSB, 2017' },
+    { zh: 'SASB 永續會計準則（行業別）', en: 'SASB Standards (Industry-specific)', org: 'ISSB / SASB' },
+    { zh: 'GHG Protocol 溫室氣體盤查議定書', en: 'GHG Protocol', org: 'WRI / WBCSD' },
+    { zh: 'ISO 14064-1:2018 溫室氣體查證', en: 'ISO 14064-1:2018', org: 'ISO' }
+  ],
+  regulations: [
+    { zh: '金管會 IFRS 永續揭露準則接軌藍圖（三階段：2026／2027／2028）', en: 'FSC Taiwan IFRS Sustainability Disclosure Roadmap (3 phases: 2026/2027/2028)', org: '金管會 FSC' },
+    { zh: '公開發行公司年報應行記載事項準則（永續相關財務資訊專章）', en: 'Regulations Governing Information to be Published in Annual Reports (Sustainability-related Financial Information chapter)', org: '金管會 FSC' },
+    { zh: '上市/上櫃公司編製與申報永續報告書作業辦法（2026.5.18 修訂）', en: 'Rules Governing the Preparation and Filing of Sustainability Reports (rev. 2026.5.18)', org: 'TWSE / TPEx' },
+    { zh: '溫室氣體排放量盤查登錄及查驗管理辦法', en: 'Regulations Governing GHG Emission Inventory, Registration and Verification', org: '環境部 MOENV' },
+    { zh: '台灣 2050 淨零排放路徑', en: 'Taiwan 2050 Net-Zero Pathway', org: '國發會 NDC' }
+  ],
+  workshop: {
+    zh: {
+      title: '氣候相關揭露評鑑工作坊：IFRS 永續揭露準則介紹與導入實務簡報',
+      host: '國立政治大學企業永續管理研究中心（政大公企中心）',
+      date: '2026 年 5 月 7 日',
+      note: '本工具部分實務要點整理自上述公開工作坊之簡報與直播內容，僅供學習與非商業參考。工作坊由會計師事務所主責永續服務執業會計師授課。',
+      url: 'https://cbs.nccu.edu.tw/'
+    },
+    en: {
+      title: 'Climate-related Disclosure Assessment Workshop: Introduction to IFRS Sustainability Disclosure Standards and Implementation Practice',
+      host: 'Center for Business Sustainability, National Chengchi University (NCCU)',
+      date: 'May 7, 2026',
+      note: 'Some practical checkpoints in this tool are compiled from the publicly available slides and livestream of the above workshop, for learning and non-commercial reference only. The workshop was taught by a CPA leading sustainability services at an accounting firm.',
+      url: 'https://cbs.nccu.edu.tw/'
+    }
+  }
+};
+
+// ── 雙語字典 ──
+const I18N = {
+  zh: {
+    // 品牌與導覽
+    brand_title: '永續報告書系統', brand_sub: '離線優先 · 資料不外流',
+    online: '● 已連線', offline: '● 離線模式', checking: '● 檢查中',
+    sec_basic: '基本資料', sec_pillars: 'IFRS S1 / S2 四大支柱', sec_tools: '工具',
+    nav_company: '公司基本資料', nav_scope: 'GHG 排放數據', nav_governance: '氣候治理',
+    nav_strategy: '氣候策略', nav_risk: '風險管理', nav_metrics: '指標與目標',
+    nav_compliance: '合規檢查', nav_reports: '報告管理', nav_settings: '設定',
+    nav_export: '匯出報告書', nav_references: '引用來源',
+    badge_req: '必填', badge_done: '完成',
+    prog_notstarted: '尚未開始', prog_chapters: '章節',
+    // 通用
+    btn_markdone: '標記完成', btn_generate_ai: 'AI 智慧生成', btn_generate_offline: '離線範本生成',
+    lang_toggle: 'EN', data_privacy: '所有資料僅儲存於您的瀏覽器（IndexedDB），不會上傳至任何伺服器。',
+    // 引用來源頁
+    ref_title: '引用來源', ref_sub: '本工具依循之法規、準則與參考資料',
+    ref_intro: '本工具之檢核項目與範本內容，依循下列公開法規、國際準則及參考資料整理。所有法規與準則條號均可追溯至第一手來源。',
+    ref_standards: '國際準則', ref_regulations: '台灣法規', ref_workshop: '參考工作坊',
+    ref_disclaimer: '免責聲明：本工具生成之內容為輔助草稿，不構成專業會計或法律建議。正式報告書應由專業人員審查確認符合當年度最新法規要求。'
+  },
+  en: {
+    brand_title: 'Sustainability Report', brand_sub: 'Offline-first · Data stays local',
+    online: '● Online', offline: '● Offline mode', checking: '● Checking',
+    sec_basic: 'Basic Info', sec_pillars: 'IFRS S1 / S2 Four Pillars', sec_tools: 'Tools',
+    nav_company: 'Company Profile', nav_scope: 'GHG Emissions', nav_governance: 'Governance',
+    nav_strategy: 'Strategy', nav_risk: 'Risk Management', nav_metrics: 'Metrics & Targets',
+    nav_compliance: 'Compliance Check', nav_reports: 'Report Manager', nav_settings: 'Settings',
+    nav_export: 'Export Report', nav_references: 'References',
+    badge_req: 'Required', badge_done: 'Done',
+    prog_notstarted: 'Not started', prog_chapters: 'chapters',
+    btn_markdone: 'Mark Done', btn_generate_ai: 'AI Generate', btn_generate_offline: 'Template Generate',
+    lang_toggle: '中', data_privacy: 'All data is stored only in your browser (IndexedDB) and is never uploaded to any server.',
+    ref_title: 'References', ref_sub: 'Regulations, standards and materials this tool follows',
+    ref_intro: 'The checkpoints and template content in this tool are compiled from the following public regulations, international standards and reference materials. All regulatory and standard references trace back to primary sources.',
+    ref_standards: 'International Standards', ref_regulations: 'Taiwan Regulations', ref_workshop: 'Reference Workshop',
+    ref_disclaimer: 'Disclaimer: Content generated by this tool is a supporting draft and does not constitute professional accounting or legal advice. The formal report should be reviewed by qualified professionals to ensure compliance with the latest regulations.'
+  }
+};
+
+if (typeof module !== 'undefined') module.exports = { References, I18N };
