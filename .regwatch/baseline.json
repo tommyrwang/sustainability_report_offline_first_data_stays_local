@@ -1,0 +1,168 @@
+{
+  "_comment": "法規基準版本比對清單 — 供 GitHub Actions 每週自動檢索比對。每次確認法規未變動時更新 last_checked；若有變動，更新 current_version 與 last_updated 並記錄於 changelog。",
+  "baseline_date": "2026-08-12",
+  "sources": [
+    {
+      "id": "fsc_roadmap",
+      "name_zh": "金管會 IFRS 永續揭露準則接軌藍圖",
+      "name_en": "FSC IFRS Sustainability Disclosure Roadmap",
+      "authority": "金管會證期局",
+      "current_version": "2023-08-17 發布；三階段 2026/2027/2028",
+      "check_url": "https://www.fsc.gov.tw/ch/home.jsp?id=96&parentpath=0,2",
+      "watch_keywords": [
+        "永續揭露準則",
+        "接軌",
+        "藍圖",
+        "S1",
+        "S2",
+        "階段"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "直接採用 ISSB 準則；2027 起逐號評估認可"
+    },
+    {
+      "id": "fsc_qa",
+      "name_zh": "金管會 IFRS 永續揭露準則問答集",
+      "name_en": "FSC IFRS Sustainability Disclosure Q&A",
+      "authority": "金管會",
+      "current_version": "2026-04-14",
+      "check_url": "https://www.fsc.gov.tw/ch/home.jsp?id=131&parentpath=0,2",
+      "watch_keywords": [
+        "永續揭露準則",
+        "問答集",
+        "Q&A"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "2026.4.14 版共同構成官方指引，系統應追蹤改版"
+    },
+    {
+      "id": "twse_guidance",
+      "name_zh": "證交所 IFRS 永續揭露實務指引",
+      "name_en": "TWSE IFRS Sustainability Disclosure Practical Guidance",
+      "authority": "臺灣證券交易所",
+      "current_version": "2026-05-22",
+      "check_url": "https://www.twse.com.tw/zh/products/sustainability/overview.html",
+      "watch_keywords": [
+        "永續揭露",
+        "實務指引",
+        "專章",
+        "懶人包"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "2026.5.22 實務指引懶人包"
+    },
+    {
+      "id": "annual_report_rules",
+      "name_zh": "公開發行公司年報應行記載事項準則（永續資訊專章）",
+      "name_en": "Regulations Governing Annual Reports (Sustainability chapter)",
+      "authority": "金管會",
+      "current_version": "現行版（永續資訊專章）",
+      "check_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0400045",
+      "watch_keywords": [
+        "年報",
+        "永續資訊",
+        "專章",
+        "記載事項"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "§7.2 董事會通過；與財報同日申報"
+    },
+    {
+      "id": "sustainability_report_rules",
+      "name_zh": "上市/上櫃公司編製與申報永續報告書作業辦法",
+      "name_en": "Rules Governing Preparation and Filing of Sustainability Reports",
+      "authority": "TWSE / TPEx",
+      "current_version": "2026-05-18 修訂",
+      "check_url": "https://twse-regulation.twse.com.tw/tw/law/DAT0201.aspx",
+      "watch_keywords": [
+        "永續報告書",
+        "編製",
+        "申報",
+        "作業辦法"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": ""
+    },
+    {
+      "id": "moenv_ghg_rules",
+      "name_zh": "溫室氣體排放量盤查登錄及查驗管理辦法",
+      "name_en": "Regulations Governing GHG Emission Inventory, Registration and Verification",
+      "authority": "環境部",
+      "current_version": "2025-12-19 修正發布",
+      "check_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=O0020102",
+      "watch_keywords": [
+        "溫室氣體",
+        "盤查登錄",
+        "查驗",
+        "管理辦法",
+        "修正"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "2025.12.19 修正：擴大列管事業、簡化小規模逸散排放源、4/30 申報期限"
+    },
+    {
+      "id": "climate_act",
+      "name_zh": "氣候變遷因應法",
+      "name_en": "Climate Change Response Act",
+      "authority": "環境部",
+      "current_version": "2023-02-15 公布施行",
+      "check_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=O0020098",
+      "watch_keywords": [
+        "氣候變遷因應法",
+        "碳費",
+        "淨零",
+        "修正"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "碳費母法；碳費費率為子法"
+    },
+    {
+      "id": "carbon_fee",
+      "name_zh": "碳費收費辦法／碳費費率",
+      "name_en": "Carbon Fee Collection Rules / Rates",
+      "authority": "環境部",
+      "current_version": "2025 開徵；費率依環境部公告",
+      "check_url": "https://www.moenv.gov.tw/",
+      "watch_keywords": [
+        "碳費",
+        "費率",
+        "收費辦法",
+        "自主減量計畫"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "2.5 萬公噸以上排放大戶適用；費率調整需追蹤"
+    },
+    {
+      "id": "issb_standards",
+      "name_zh": "IFRS S1 / S2 準則",
+      "name_en": "IFRS S1 / S2 Standards",
+      "authority": "ISSB",
+      "current_version": "2023-06 發布",
+      "check_url": "https://www.ifrs.org/issued-standards/ifrs-sustainability-standards-navigator/",
+      "watch_keywords": [
+        "IFRS S1",
+        "IFRS S2",
+        "amendment",
+        "exposure draft"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "後續 ISSB 新號準則（如自然相關）須追蹤"
+    },
+    {
+      "id": "sasb_standards",
+      "name_zh": "SASB 行業別準則",
+      "name_en": "SASB Industry Standards",
+      "authority": "ISSB / SASB",
+      "current_version": "2023-12 版",
+      "check_url": "https://sasb.ifrs.org/standards/",
+      "watch_keywords": [
+        "SASB",
+        "standards",
+        "update",
+        "TC-HW"
+      ],
+      "last_checked": "2026-08-12",
+      "notes": "ISSB 持續進行 SASB 準則國際適用性修訂"
+    }
+  ]
+}

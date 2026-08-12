@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>永續報告書生成系統 — 離線版</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#9E2B25">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* 房子風格主色：深紅 #9E2B25、金棕 #9C6B1E、金色 #C8A23C */
+  --teal:#9E2B25;--teal-mid:#B8342D;--teal-light:#F6E7E5;
+  --blue:#9C6B1E;--blue-mid:#B8863A;--blue-light:#F5EBD9;
+  --amber:#9C6B1E;--amber-light:#F5EBD9;
+  --gold:#C8A23C;--gold-light:#FAF3E0;
+  --red:#9E2B25;--red-light:#F6E7E5;
+  --green:#6B7A2E;--green-light:#F0F2E0;
+  --bg:#FFFFFF;--bg2:#FBF8F2;--border:#E8E0D2;--text:#2C2621;--muted:#6E655A;
+}
+body{font-family:"Microsoft JhengHei","PingFang TC",system-ui,sans-serif;background:var(--bg2);color:var(--text);font-size:14px;line-height:1.6}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+.sidebar{background:var(--bg);border-right:1px solid var(--border);padding:1rem 0;display:flex;flex-direction:column;gap:1px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{padding:0 1rem 0.75rem}
+.brand-title{font-size:15px;font-weight:600;color:var(--text)}
+.brand-sub{font-size:11px;color:var(--muted)}
+.online-badge{font-size:11px;font-weight:500;margin-top:4px}
+.progress-bar{margin:0.75rem 1rem 2px;background:var(--border);border-radius:4px;height:5px;overflow:hidden}
+.progress-fill{height:100%;background:var(--teal-mid);transition:width .4s}
+.progress-label{padding:0 1rem 0.5rem;font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.sidebar-section{padding:0.75rem 1rem 0.25rem;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.06em}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 1rem;cursor:pointer;font-size:13px;color:var(--muted);border-left:2px solid transparent;transition:all .15s}
+.nav-item:hover{background:var(--bg2);color:var(--text)}
+.nav-item.active{background:var(--teal-light);color:var(--teal);border-left-color:var(--teal);font-weight:500}
+.nav-item .badge{margin-left:auto;font-size:9px;padding:2px 6px;border-radius:10px;font-weight:500}
+.badge-done{background:var(--green-light);color:var(--green)}
+.badge-req{background:var(--red-light);color:var(--red)}
+.badge-opt{background:var(--amber-light);color:var(--amber)}
+.main{display:flex;flex-direction:column}
+.topbar{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg)}
+.topbar-title{font-size:16px;font-weight:600}
+.topbar-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.save-indicator{font-size:11px;color:var(--muted)}
+.btn{padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--text);transition:all .15s;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn:hover{background:var(--bg2)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn-primary:hover{background:var(--teal-mid)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.content{flex:1;padding:1.5rem;max-width:900px}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.card-title{font-size:14px;font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{display:inline-flex;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;margin:1px}
+.tag-tcfd{background:var(--teal-light);color:var(--teal)}
+.tag-ifrs{background:var(--blue-light);color:var(--blue)}
+.tag-sasb{background:var(--amber-light);color:var(--amber)}
+.tag-env{background:var(--green-light);color:var(--green)}
+.tag-req{background:var(--red-light);color:var(--red)}
+.form-group{margin-bottom:1rem}
+.form-label{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+input,select,textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;background:var(--bg);color:var(--text);font-family:inherit}
+textarea{resize:vertical;min-height:80px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal-mid)}
+.form-hint{font-size:11px;color:var(--muted);margin-top:3px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.ai-box{background:var(--teal-light);border:1px solid var(--teal-mid);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.ai-box-title{font-size:13px;font-weight:600;color:var(--teal);margin-bottom:0.5rem;display:flex;align-items:center;gap:6px;justify-content:space-between}
+.ai-toggle{font-size:11px;font-weight:400;color:var(--muted);display:flex;align-items:center;gap:4px}
+.ai-toggle input{width:auto}
+.ai-output{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:13px;line-height:1.9;min-height:60px;white-space:pre-wrap;display:none}
+.ai-output.visible{display:block}
+.ai-loading{display:none;align-items:center;gap:8px;color:var(--teal);font-size:13px;margin-top:8px}
+.ai-loading.visible{display:flex}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--teal-mid);animation:pulse 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.scope-bar{margin-bottom:10px}
+.scope-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.scope-track{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.scope-fill{height:100%;border-radius:4px;transition:width .6s}
+.compliance-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.compliance-item{border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px}
+.compliance-item.pass{border-left:3px solid var(--teal-mid)}
+.compliance-item.warn{border-left:3px solid var(--amber)}
+.compliance-item.fail{border-left:3px solid var(--red)}
+.compliance-label{font-weight:500;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center}
+.compliance-desc{color:var(--muted);font-size:11px}
+.status-dot{width:7px;height:7px;border-radius:50%}
+.status-dot.pass{background:var(--teal-mid)}.status-dot.warn{background:var(--amber)}.status-dot.fail{background:var(--red)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.metric{background:var(--bg2);border-radius:8px;padding:0.75rem 1rem}
+.metric-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.metric-value{font-size:22px;font-weight:600}
+.metric-sub{font-size:11px;color:var(--muted)}
+.report-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.info-banner{background:var(--blue-light);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:1rem;display:flex;gap:8px;align-items:flex-start}
+.ti{font-style:normal}
+.pathway-step{display:flex;gap:12px;align-items:flex-start;background:var(--bg2);border-radius:8px;padding:10px 12px}
+.pathway-num{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.pathway-label{font-size:13px;font-weight:500}
+.pathway-hint{font-size:11px;color:var(--muted);margin-top:2px}
+.pathway-arrow{text-align:center;color:var(--teal-mid);font-size:14px;margin:2px 0}
+.linkage-row{display:grid;grid-template-columns:1.3fr 1.5fr 1.2fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.linkage-header{font-weight:600;color:var(--muted);font-size:11px}
+.linkage-risk{font-weight:500}
+.linkage-account{color:var(--text)}
+.linkage-form{color:var(--muted);font-size:11px}
+.pitfall-item{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.pitfall-item input{width:auto;margin-top:3px}
+.pitfall-label{font-size:13px;font-weight:500;color:var(--amber)}
+.pitfall-check{font-size:12px;color:var(--muted);margin-top:2px}
+.ktl-row{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.ktl-date{font-weight:600;color:var(--red)}
+.ktl-item{color:var(--text)}
+/* 章節檢核表 */
+.checklist{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.checklist-title{font-size:13px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:6px;color:var(--amber)}
+.checklist-intro{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7}
+.check-item{display:flex;gap:8px;align-items:flex-start;font-size:13px;padding:6px 0;cursor:pointer}
+.check-item input{width:auto;margin-top:3px;flex-shrink:0}
+.check-item-body{flex:1}
+.check-item-label{font-weight:500}
+.check-item-hint{font-size:11px;color:var(--muted);margin-top:1px}
+.ref-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.ref-row:last-child{border-bottom:none}
+.ref-name{flex:1}
+.ref-org{color:var(--muted);font-size:12px;white-space:nowrap}
+.ref-workshop{padding:4px 0}
+.ref-ws-title{font-weight:500;font-size:14px;margin-bottom:4px}
+.ref-ws-meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+.ref-ws-note{font-size:12px;line-height:1.7;color:var(--text);background:var(--bg2);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.ref-ws-link{font-size:12px;color:var(--teal);word-break:break-all}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div class="brand-title" data-i18n="brand_title">永續報告書系統</div>
+        <div class="brand-sub" data-i18n="brand_sub">離線優先 · 資料不外流</div></div>
+        <button id="lang-toggle" onclick="App.toggleLang()" style="border:1px solid var(--border);background:var(--bg);border-radius:6px;padding:3px 8px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--text);flex-shrink:0">EN</button>
+      </div>
+      <div class="online-badge" id="online-status">● 檢查中</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-bar" style="width:0%"></div></div>
+    <div class="progress-label"><span id="prog-label" data-i18n="prog_notstarted">尚未開始</span><span id="prog-pct">0%</span></div>
+
+    <div class="sidebar-section" data-i18n="sec_basic">基本資料</div>
+    <div class="nav-item active" onclick="App.showPage('company')" id="nav-company"><span data-i18n="nav_company">公司基本資料</span><span class="badge badge-req" id="badge-company" data-i18n="badge_req">必填</span></div>
+    <div class="nav-item" onclick="App.showPage('scope')" id="nav-scope"><span data-i18n="nav_scope">GHG 排放數據</span><span class="badge badge-req" id="badge-scope" data-i18n="badge_req">必填</span></div>
+
+    <div class="sidebar-section" data-i18n="sec_pillars">IFRS S1 / S2 四大支柱</div>
+    <div class="nav-item" onclick="App.showPage('governance')" id="nav-governance"><span data-i18n="nav_governance">氣候治理</span><span class="badge badge-req" id="badge-governance" data-i18n="badge_req">必填</span></div>
+    <div class="nav-item" onclick="App.showPage('strategy')" id="nav-strategy"><span data-i18n="nav_strategy">氣候策略</span><span class="badge badge-req" id="badge-strategy" data-i18n="badge_req">必填</span></div>
+    <div class="nav-item" onclick="App.showPage('risk')" id="nav-risk"><span data-i18n="nav_risk">風險管理</span><span class="badge badge-req" id="badge-risk" data-i18n="badge_req">必填</span></div>
+    <div class="nav-item" onclick="App.showPage('metrics')" id="nav-metrics"><span data-i18n="nav_metrics">指標與目標</span><span class="badge badge-req" id="badge-metrics" data-i18n="badge_req">必填</span></div>
+
+    <div class="sidebar-section" data-i18n="sec_tools">工具</div>
+    <div class="nav-item" onclick="App.showPage('compliance')" id="nav-compliance"><span data-i18n="nav_compliance">合規檢查</span></div>
+    <div class="nav-item" onclick="App.showPage('references')" id="nav-references"><span data-i18n="nav_references">引用來源</span></div>
+    <div class="nav-item" onclick="App.showPage('reports')" id="nav-reports"><span data-i18n="nav_reports">報告管理</span></div>
+    <div class="nav-item" onclick="App.showPage('settings')" id="nav-settings"><span data-i18n="nav_settings">設定</span></div>
+    <div class="nav-item" onclick="App.showPage('export')" id="nav-export"><span data-i18n="nav_export">匯出報告書</span></div>
+  </aside>
+
+  <div class="main">
+    <!-- 公司基本資料 -->
+    <div id="page-company" class="page-content" style="display:flex;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">公司基本資料</div><div class="topbar-sub">填寫後自動判斷法規時程與 SASB 行業別</div></div>
+        <div class="topbar-actions"><span class="save-indicator" id="save-indicator"></span><button class="btn btn-primary btn-sm" onclick="App.markDone('company')">標記完成</button></div></div>
+      <div class="content">
+        <div class="info-banner"><span class="ti">ⓘ</span><span>所有資料僅儲存於您的瀏覽器（IndexedDB），不會上傳至任何伺服器。</span></div>
+        <div class="card">
+          <div class="card-title">基本識別資料</div>
+          <div class="form-grid">
+            <div class="form-group"><div class="form-label">公司名稱</div><input id="co-name" placeholder="例：宏碁股份有限公司"></div>
+            <div class="form-group"><div class="form-label">統一編號</div><input id="co-id" placeholder="8位數字"></div>
+            <div class="form-group"><div class="form-label">實收資本額（億元）</div><input type="number" id="co-capital" placeholder="例：100" oninput="updateTimeline()"><div class="form-hint">決定 IFRS 準則適用時程</div></div>
+            <div class="form-group"><div class="form-label">上市/上櫃</div><select id="co-listed"><option>上市公司（TWSE）</option><option>上櫃公司（OTC）</option><option>興櫃公司</option><option>公開發行公司</option></select></div>
+            <div class="form-group"><div class="form-label">報告年度</div><select id="co-year"><option>2024</option><option>2025</option><option>2026</option></select></div>
+            <div class="form-group"><div class="form-label">主要產業</div><select id="co-industry" onchange="updateSasb()"><option value="TC-HW">科技硬體（TC-HW）</option><option value="TC-SC">半導體（TC-SC）</option><option value="IF-BK">銀行（IF-BK）</option><option value="CN-CM">水泥（CN-CM）</option><option value="RT-AA">航空（TR-AL）</option><option value="EM-EP">電力（EM-EP）</option><option value="FB-BV">食品飲料（FB-BV）</option><option value="other">其他</option></select></div>
+          </div>
+        </div>
+        <div class="card"><div class="card-title">SASB 行業別對應</div><div id="sasb-info" style="font-size:13px;color:var(--muted)">選擇產業後自動顯示</div></div>
+        <div class="card"><div class="card-title">適用法規時程（自動判斷）</div><div id="timeline-auto" style="font-size:13px;color:var(--muted)">填寫資本額後自動計算</div></div>
+
+        <div class="checklist"><div class="checklist-title"><span class="ti">✓</span> 揭露範圍與重大性檢核表</div>
+          <div class="checklist-intro">本專章採財務重大性（投資人觀點），與採影響重大性之永續報告書分屬不同法源。撰寫前先確認揭露範圍與報導邊界，並留存重大性判斷底稿以備主管機關查核。</div>
+          <label class="check-item"><input type="checkbox" id="chk-materiality"><div class="check-item-body"><div class="check-item-label">已以量化及質性因子完成重大性判斷並留存底稿</div><div class="check-item-hint">量化面觀察現金流量、資源消耗、投報率；質性面衡酌風險性質、資源依賴、地理位置與行業</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-undisclosed"><div class="check-item-body"><div class="check-item-label">未納入揭露之相關資訊已另存底稿備查</div><div class="check-item-hint">如個別個體碳價格等，縱未揭露亦須留底稿</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-boundary"><div class="check-item-body"><div class="check-item-label">報導個體與財務報表報導個體一致（S1.20）</div><div class="check-item-hint">資訊蒐集範圍涵蓋子公司，含無實質營運者之比例原則處理</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-intragroup"><div class="check-item-body"><div class="check-item-label">集團內交易實質已辨識，內部交易未重複計列</div><div class="check-item-hint">例：集團內 A 廠向 B 公司採購綠電，須辨識交易對象是否為集團組成個體</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-assurance"><div class="check-item-body"><div class="check-item-label">範疇一、二排放已依規定取得第三方確信意見</div><div class="check-item-hint">若申報時未及取得，須註明並於同年 10 月底前補揭露</div></div></label>
+          <button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="App.generateMaterialityDoc()">產生重大性判斷底稿範本</button>
+          <div class="ai-output" id="materiality-output" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GHG -->
+    <div id="page-scope" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">溫室氣體排放數據</div><div class="topbar-sub">GHG Protocol / ISO 14064-1，符合環境部規定</div></div>
+        <div class="topbar-actions"><button class="btn btn-primary btn-sm" onclick="App.markDone('scope')">標記完成</button></div></div>
+      <div class="content">
+        <div class="card"><div class="card-title">範疇一（直接排放）<span class="tag tag-req">必填</span><span class="tag tag-env">環境部</span></div>
+          <div class="form-grid">
+            <div class="form-group"><div class="form-label">固定燃燒源（公噸 CO₂e）</div><input type="number" id="s1-fixed" placeholder="0" oninput="updateScopeChart()"></div>
+            <div class="form-group"><div class="form-label">移動燃燒源（公噸 CO₂e）</div><input type="number" id="s1-mobile" placeholder="0" oninput="updateScopeChart()"></div>
+            <div class="form-group"><div class="form-label">製程排放（公噸 CO₂e）</div><input type="number" id="s1-process" placeholder="0" oninput="updateScopeChart()"></div>
+            <div class="form-group"><div class="form-label">逸散排放（公噸 CO₂e）</div><input type="number" id="s1-fugitive" placeholder="0" oninput="updateScopeChart()"></div>
+          </div></div>
+        <div class="card"><div class="card-title">範疇二（購買能源）<span class="tag tag-req">必填</span></div>
+          <div class="form-grid">
+            <div class="form-group"><div class="form-label">電力消耗（度）</div><input type="number" id="s2-kwh" placeholder="0"></div>
+            <div class="form-group"><div class="form-label">排放量—地點基礎</div><input type="number" id="s2-location" placeholder="0"></div>
+            <div class="form-group"><div class="form-label">排放量—市場基礎 <span class="tag tag-ifrs">IFRS S2 強制</span></div><input type="number" id="s2-market" placeholder="0" oninput="updateScopeChart()"></div>
+            <div class="form-group"><div class="form-label">再生能源比率（%）<span class="tag tag-sasb">SASB</span></div><input type="number" id="s2-re" placeholder="0"></div>
+          </div></div>
+        <div class="card"><div class="card-title">範疇三（價值鏈）<span class="tag tag-ifrs">IFRS S2 強制（首年可豁免）</span></div>
+          <div class="form-grid">
+            <div class="form-group"><div class="form-label">類別1：購買商品與服務</div><input type="number" id="s3-1" placeholder="0" oninput="updateScopeChart()"></div>
+            <div class="form-group"><div class="form-label">類別4：上游運輸</div><input type="number" id="s3-4" placeholder="0" oninput="updateScopeChart()"></div>
+            <div class="form-group"><div class="form-label">類別11：產品使用</div><input type="number" id="s3-11" placeholder="0" oninput="updateScopeChart()"></div>
+            <div class="form-group"><div class="form-label">其他類別合計</div><input type="number" id="s3-other" placeholder="0" oninput="updateScopeChart()"></div>
+          </div></div>
+        <div class="card"><div class="card-title">排放分布預覽</div><div id="scope-preview" style="font-size:13px;color:var(--muted)">輸入數據後自動更新</div></div>
+      </div>
+    </div>
+
+    <!-- 治理 -->
+    <div id="page-governance" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">氣候治理</div><div class="topbar-sub">TCFD 治理支柱 ／ IFRS S2 §6-7</div></div>
+        <div class="topbar-actions"><button class="btn btn-sm" onclick="App.generate('governance')"><span class="gen-btn-label">生成文字</span></button><button class="btn btn-primary btn-sm" onclick="App.markDone('governance')">標記完成</button></div></div>
+      <div class="content">
+        <div class="card"><div class="card-title">董事會監督機制 <span class="tag tag-tcfd">TCFD</span><span class="tag tag-ifrs">S2 §6</span></div>
+          <div class="form-group"><div class="form-label">負責氣候議題的委員會名稱</div><input id="gov-committee" placeholder="例：風險管理暨永續發展委員會（RMSDC）"></div>
+          <div class="form-group"><div class="form-label">委員會召集人</div><input id="gov-chair" placeholder="例：由獨立董事擔任主席"></div>
+          <div class="form-group"><div class="form-label">審查頻率</div><select id="gov-freq"><option>每季向董事會報告</option><option>每半年向董事會報告</option><option>每年至少一次向董事會報告</option></select></div>
+          <div class="form-group"><div class="form-label">治理架構補充說明</div><textarea id="gov-desc" placeholder="委員會職責、下設工作小組、報告關係..."></textarea></div></div>
+        <div class="card"><div class="card-title">管理層職責 <span class="tag tag-ifrs">S1 §6</span></div>
+          <div class="form-group"><div class="form-label">負責氣候議題的管理層職稱</div><input id="gov-mgr" placeholder="例：永續長（CSO）"></div>
+          <div class="form-group"><div class="form-label">職責說明</div><textarea id="gov-mgr-desc" placeholder="如何識別風險、制定策略、報告頻率..."></textarea></div></div>
+        <div class="card"><div class="card-title">薪酬連結機制 <span class="tag tag-ifrs">IFRS S2 強制</span></div>
+          <div class="form-grid">
+            <div class="form-group"><div class="form-label">ESG 是否納入薪酬</div><select id="gov-pay"><option>是，已納入高階主管薪酬</option><option>是，僅納入部分指標</option><option>規劃中</option><option>否</option></select></div>
+            <div class="form-group"><div class="form-label">ESG 目標權重（%）</div><input type="number" id="gov-pay-pct" placeholder="例：10"></div></div>
+          <div class="form-group"><div class="form-label">薪酬連結的氣候指標</div><textarea id="gov-pay-kpi" placeholder="例：再生電力達成率、供應商 SBT 承諾比率..."></textarea></div></div>
+        <div class="ai-box"><div class="ai-box-title"><span>生成 — 氣候治理章節</span><label class="ai-toggle"><input type="checkbox" id="use-ai-governance" checked>連線時用 AI</label></div>
+          <div class="ai-loading" id="governance-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>生成中...</span></div>
+          <div class="ai-output" id="governance-output"></div></div>
+      </div>
+    </div>
+
+    <!-- 策略 -->
+    <div id="page-strategy" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">氣候策略</div><div class="topbar-sub">TCFD 策略支柱 ／ IFRS S2 §10-22 ／ SASB</div></div>
+        <div class="topbar-actions"><button class="btn btn-sm" onclick="App.generate('strategy')"><span class="gen-btn-label">生成文字</span></button><button class="btn btn-primary btn-sm" onclick="App.markDone('strategy')">標記完成</button></div></div>
+      <div class="content">
+        <div class="card"><div class="card-title">氣候風險識別 <span class="tag tag-tcfd">TCFD</span><span class="tag tag-ifrs">S2</span><span class="tag tag-sasb">SASB</span></div>
+          <div class="form-group"><div class="form-label">主要轉型風險（2-3 項）</div><textarea id="str-transition" placeholder="例：1. 法規政策風險：台灣碳費 2025 年實施...&#10;2. 市場風險：客戶要求碳足跡報告..."></textarea></div>
+          <div class="form-group"><div class="form-label">主要實體風險（1-2 項）</div><textarea id="str-physical" placeholder="例：平均氣溫上升導致廠區用電增加，估每年電費 +12%..."></textarea></div>
+          <div class="form-group"><div class="form-label">主要氣候機會</div><textarea id="str-opp" placeholder="例：低碳產品需求增加、綠色融資利率優惠..."></textarea></div></div>
+        <div class="card"><div class="card-title">時間區間與情境分析 <span class="tag tag-ifrs">S2 §14</span></div>
+          <div class="form-grid">
+            <div class="form-group"><div class="form-label">短期</div><input id="str-short" placeholder="例：3 年以內"></div>
+            <div class="form-group"><div class="form-label">中期</div><input id="str-mid" placeholder="例：3–5 年"></div>
+            <div class="form-group"><div class="form-label">長期</div><input id="str-long" placeholder="例：5 年以上"></div>
+            <div class="form-group"><div class="form-label">情境分析類型</div><select id="str-scenario"><option>已完成（含量化財務影響）</option><option>已完成（質性描述為主）</option><option>使用豁免（首年適用）</option><option>規劃中</option></select></div></div>
+          <div class="form-group"><div class="form-label">情境分析結果說明</div><textarea id="str-scenario-desc" placeholder="使用情境（RCP 2.6/8.5）、假設前提、財務影響..."></textarea></div></div>
+        <div class="ai-box"><div class="ai-box-title"><span>生成 — 氣候策略章節</span><label class="ai-toggle"><input type="checkbox" id="use-ai-strategy" checked>連線時用 AI</label></div>
+          <div class="ai-loading" id="strategy-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>生成中...</span></div>
+          <div class="ai-output" id="strategy-output"></div></div>
+
+        <div class="checklist"><div class="checklist-title"><span class="ti">✓</span> 財務影響評估檢核表</div>
+          <div class="checklist-intro">財務影響評估是實作最吃力、也最易被挑戰之處。每一風險／機會均應依五步驟衝擊路徑推演，並連結至具體財務報表科目。財務影響得先以質性方式表達，尚不強制揭露具體量化金額。</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text);margin:8px 0 6px">衝擊路徑（五步驟推演）</div>
+          <div id="impact-pathway"></div>
+          <div style="font-size:12px;font-weight:600;color:var(--text);margin:14px 0 6px">財會連結科目盤點</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px">前端單位提出因應活動時，同步標註表單編號（PO 單號、報支單號、財產編號等），財會據以自系統撈取對應金額。</div>
+          <div class="linkage-row linkage-header"><div>風險／機會</div><div>財務報表科目</div><div>勾稽表單</div></div>
+          <div id="financial-linkage"></div>
+          <label class="check-item" style="margin-top:10px"><input type="checkbox" id="chk-finance"><div class="check-item-body"><div class="check-item-label">財會單位已實質參與，財務影響金額具表單／系統勾稽依據</div><div class="check-item-hint">一改過往由永續單位單獨蒐整之作業型態</div></div></label>
+        </div>
+
+        <div class="checklist"><div class="checklist-title"><span class="ti">✓</span> 情境分析與時間區間檢核表</div>
+          <div class="checklist-intro">情境分析為擬定氣候因應策略之工具，撰寫時須避免四項常見誤區。情境分析是分析工具（what if），韌性評估是解讀影響（so what）；情境分析無須每年重做，但氣候韌性評估應每年更新。</div>
+          <div id="scenario-pitfalls" style="display:flex;flex-direction:column;gap:6px"></div>
+          <div class="form-group" style="margin-top:12px"><div class="form-label">情境工具選擇（依目的擇工具）</div>
+            <select id="scenario-tool"><option value="">請選擇...</option><option value="ssp">IPCC SSP 情境 — 適合實體風險</option><option value="ngfs">NGFS 情境 — 適合金融機構轉型壓測</option><option value="ndc">國發會淨零路徑 — 適合台灣在地政策模擬</option></select></div>
+          <label class="check-item"><input type="checkbox" id="chk-timedefine"><div class="check-item-body"><div class="check-item-label">短、中、長期已定義並連結策略性決策規劃時程（S2.10(d)）</div><div class="check-item-hint">不能僅寫「短中長期」而無定義，可考量與國家淨零時程一致</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-resilience"><div class="check-item-body"><div class="check-item-label">氣候韌性評估已完成本年度更新</div><div class="check-item-hint">揭露者為對情境分析結果之「解讀」，而非結果本身</div></div></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 風險 -->
+    <div id="page-risk" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">風險管理</div><div class="topbar-sub">TCFD 風險管理支柱 ／ IFRS S2 §23-25</div></div>
+        <div class="topbar-actions"><button class="btn btn-sm" onclick="App.generate('risk')"><span class="gen-btn-label">生成文字</span></button><button class="btn btn-primary btn-sm" onclick="App.markDone('risk')">標記完成</button></div></div>
+      <div class="content">
+        <div class="card"><div class="card-title">風險管理流程</div>
+          <div class="form-group"><div class="form-label">風險辨識方法</div><textarea id="risk-id" placeholder="例：每年舉辦氣候風險鑑別工作坊，參考 TCFD 及 SASB TC-HW..."></textarea></div>
+          <div class="form-group"><div class="form-label">風險評量方法</div><textarea id="risk-assess" placeholder="例：三維度評分法（衝擊×脆弱度×機率）..."></textarea></div>
+          <div class="form-group"><div class="form-label">整合至 ERM 架構</div><textarea id="risk-erm" placeholder="例：氣候變遷列為 ERM 第五大風險構面..."></textarea></div></div>
+        <div class="card"><div class="card-title">供應鏈氣候風險管理 <span class="tag tag-sasb">SASB TC-HW-430a</span></div>
+          <div class="form-group"><div class="form-label">供應商 GHG 管理措施</div><textarea id="risk-supply" placeholder="例：CDP 供應鏈問卷、ESG 評分卡..."></textarea></div>
+          <div class="form-group"><div class="form-label">供應商 SBT/RE100 承諾比率（%）</div><input type="number" id="risk-sbt" placeholder="例：81"></div></div>
+        <div class="ai-box"><div class="ai-box-title"><span>生成 — 風險管理章節</span><label class="ai-toggle"><input type="checkbox" id="use-ai-risk" checked>連線時用 AI</label></div>
+          <div class="ai-loading" id="risk-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>生成中...</span></div>
+          <div class="ai-output" id="risk-output"></div></div>
+
+        <div class="checklist"><div class="checklist-title"><span class="ti">✓</span> 風險管理整合檢核表</div>
+          <div class="checklist-intro">建議整合既有 ERM、TCFD 及 GRI 重大主題鑑別流程，減少重複投入與多頭馬車，同時產出 GRI 重大主題與關鍵永續風險機會，達成資源整合與揭露一致。</div>
+          <label class="check-item"><input type="checkbox" id="chk-ermintegrate"><div class="check-item-body"><div class="check-item-label">氣候風險已整合至企業整體風險管理（ERM）流程</div><div class="check-item-hint">與策略、營運、財務、災害風險並列，透過三道防線管理</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-riskmap"><div class="check-item-body"><div class="check-item-label">已呈現氣候風險在所有企業風險中的相對排序</div><div class="check-item-hint">於風險矩陣中標示位置，方便與其他風險比較優先序</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-supplychain"><div class="check-item-body"><div class="check-item-label">供應鏈氣候風險管理已納入揭露</div><div class="check-item-hint">Scope 3 管理、供應商減碳目標、能力建構</div></div></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 指標 -->
+    <div id="page-metrics" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">氣候指標與目標</div><div class="topbar-sub">TCFD ／ IFRS S2 §26-38 ／ SASB</div></div>
+        <div class="topbar-actions"><button class="btn btn-sm" onclick="App.generate('metrics')"><span class="gen-btn-label">生成文字</span></button><button class="btn btn-primary btn-sm" onclick="App.markDone('metrics')">標記完成</button></div></div>
+      <div class="content">
+        <div class="card"><div class="card-title">減碳目標 <span class="tag tag-ifrs">S2 §36</span></div>
+          <div class="form-grid">
+            <div class="form-group"><div class="form-label">目標類型</div><select id="mt-type"><option>科學基礎減碳目標（SBTi 認證）</option><option>絕對量減碳目標</option><option>碳密集度目標</option><option>淨零排放承諾</option></select></div>
+            <div class="form-group"><div class="form-label">基準年</div><input type="number" id="mt-base" placeholder="例：2019"></div>
+            <div class="form-group"><div class="form-label">Scope 1+2 目標（2030，%）</div><input type="number" id="mt-s12" placeholder="例：50"></div>
+            <div class="form-group"><div class="form-label">Scope 3 目標（2030，%）</div><input type="number" id="mt-s3" placeholder="例：35"></div>
+            <div class="form-group"><div class="form-label">淨零目標年份</div><input type="number" id="mt-nz" placeholder="例：2050"></div>
+            <div class="form-group"><div class="form-label">RE100 目標年份</div><input type="number" id="mt-re100" placeholder="例：2035"></div>
+            <div class="form-group"><div class="form-label">產品能效改善（SASB）</div><input id="mt-product-energy" placeholder="例：筆電較 2016 降 43.9%"></div>
+            <div class="form-group"><div class="form-label">PCR 回收料比率（SASB）</div><input id="mt-pcr" placeholder="例：18.6%"></div></div></div>
+        <div class="card"><div class="card-title">內部碳價格 <span class="tag tag-ifrs">IFRS S2 強制（若已採用）</span></div>
+          <div class="form-grid">
+            <div class="form-group"><div class="form-label">是否已採用</div><select id="mt-carbon-price"><option>是</option><option>否（規劃中）</option><option>否</option></select></div>
+            <div class="form-group"><div class="form-label">碳價範圍（USD/公噸）</div><input id="mt-carbon-range" placeholder="例：63–127"></div></div></div>
+        <div class="ai-box"><div class="ai-box-title"><span>生成 — 指標與目標章節</span><label class="ai-toggle"><input type="checkbox" id="use-ai-metrics" checked>連線時用 AI</label></div>
+          <div class="ai-loading" id="metrics-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>生成中...</span></div>
+          <div class="ai-output" id="metrics-output"></div></div>
+
+        <div class="checklist"><div class="checklist-title"><span class="ti">✓</span> 指標與目標揭露檢核表</div>
+          <div class="checklist-intro">跨行業指標先揭露合併層級總數，再依彙總與細分原則決定是否按行業別細分。公司特定指標須揭露定義、外部驗證與方法論；排放目標須揭露基準年、里程碑與期中目標、淨額或總額、碳權使用程度與類型、及與最新國際氣候協定之對比。</div>
+          <label class="check-item"><input type="checkbox" id="chk-crossindustry"><div class="check-item-body"><div class="check-item-label">跨行業指標先列合併總數，再依彙總／細分原則決定行業別揭露</div><div class="check-item-hint">7 項跨行業指標＋行業基礎指標</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-targetbase"><div class="check-item-body"><div class="check-item-label">排放目標已揭露基準年、里程碑、淨額/總額、碳權使用</div><div class="check-item-hint">並與最新國際氣候協定（巴黎協定、NDCs）對比</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-payroll"><div class="check-item-body"><div class="check-item-label">高階主管薪酬連結以當期財報認列薪酬為計算基礎</div><div class="check-item-hint">得以區間方式描述連結比例，或正面表列具重大性個體</div></div></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 合規 -->
+    <div id="page-compliance" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">合規完整度檢查</div><div class="topbar-sub">IFRS S1/S2、TCFD、SASB、環境部（完全離線檢查）</div></div>
+        <div class="topbar-actions"><button class="btn btn-sm" onclick="App.runCompliance()">重新檢查</button></div></div>
+      <div class="content">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">通過</div><div class="metric-value" id="c-pass">—</div><div class="metric-sub">已符合</div></div>
+          <div class="metric"><div class="metric-label">警告</div><div class="metric-value" id="c-warn">—</div><div class="metric-sub">建議補強</div></div>
+          <div class="metric"><div class="metric-label">缺失</div><div class="metric-value" id="c-fail">—</div><div class="metric-sub">需填寫</div></div></div>
+        <div class="compliance-grid" id="compliance-list"></div>
+
+        <div class="checklist" style="margin-top:1rem"><div class="checklist-title"><span class="ti">✓</span> 資訊品質與內控檢核表</div>
+          <div class="checklist-intro">金管會已要求將「永續資訊之管理」納入內部控制制度，並列為年度必要稽核項目，自 2025 年 1 月 1 日施行。健全內控可有效防範漂綠風險。</div>
+          <label class="check-item"><input type="checkbox" id="chk-internalctrl"><div class="check-item-body"><div class="check-item-label">已建置報導結算流程與揭露指標品質管理控制文件</div><div class="check-item-hint">以 GHG 為例：盤查邊界確認、排放源維護查核、計算方法適當性、合併數據覆核</div></div></label>
+          <label class="check-item"><input type="checkbox" id="chk-greenwash"><div class="check-item-body"><div class="check-item-label">已檢視漂綠風險：資料可追溯、與業務及財報相匹配</div><div class="check-item-hint">避免過度宣傳或虛報成果</div></div></label>
+        </div>
+
+        <div class="checklist"><div class="checklist-title"><span class="ti">✓</span> 程序與時程檢核表</div>
+          <div class="checklist-intro">年報永續資訊專章須與年度財務報告同時申報，時程緊湊，須有明確作業程序、權責單位與嚴謹之時間安排，且須經董事會通過。</div>
+          <div class="ktl-row"><div class="ktl-date">4/15</div><div class="ktl-item">完成專章編製並經董事會通過，申報數位平台（工項 4-1 提前）</div></div>
+          <div class="ktl-row"><div class="ktl-date">股東會前 14 日</div><div class="ktl-item">專章英文版併入股東會年報英文版電子檔申報</div></div>
+          <div class="ktl-row"><div class="ktl-date">財報申報日</div><div class="ktl-item">年報永續資訊專章須與年度財務報告同時申報</div></div>
+          <div class="ktl-row"><div class="ktl-date">10 月底前</div><div class="ktl-item">溫盤原申報數與確信數差異達 5% 或性質重大者，重新提報董事會並完成更正申報</div></div>
+          <label class="check-item" style="margin-top:10px"><input type="checkbox" id="chk-board"><div class="check-item-body"><div class="check-item-label">專章完整資訊已經董事會決議通過（§7.2）</div><div class="check-item-hint">納入年報後即依證交法成為法定申報文件，不得虛偽或隱匿</div></div></label>
+        </div>
+      </div>
+    </div>
+    <!-- 引用來源 -->
+    <div id="page-references" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title" data-i18n="ref_title">引用來源</div><div class="topbar-sub" data-i18n="ref_sub">本工具依循之法規、準則與參考資料</div></div></div>
+      <div class="content" id="references-content"></div>
+    </div>
+    <div id="page-reports" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">報告管理</div><div class="topbar-sub">所有報告儲存於本機 IndexedDB</div></div>
+        <div class="topbar-actions"><button class="btn btn-sm" onclick="App.backupData()">備份全部</button><button class="btn btn-primary btn-sm" onclick="App.newReport()">+ 新報告</button></div></div>
+      <div class="content">
+        <div class="card"><div class="card-title">已儲存的報告</div><div id="report-list"></div></div>
+        <div class="card"><div class="card-title">從備份還原</div>
+          <input type="file" accept=".json" onchange="App.restoreData(this)"><div class="form-hint">選擇先前備份的 JSON 檔案</div></div>
+      </div>
+    </div>
+
+    <!-- 設定 -->
+    <div id="page-settings" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">設定</div><div class="topbar-sub">AI 生成需要您自己的 Anthropic API Key</div></div></div>
+      <div class="content">
+        <div class="info-banner"><span class="ti">ⓘ</span><span>離線模式下，系統使用內建範本引擎生成章節，無需 API Key。若要使用 AI 智慧生成（連線時），請填入您的 API Key，僅儲存於本機瀏覽器。</span></div>
+        <div class="card"><div class="card-title">Anthropic API Key（選填）</div>
+          <div class="form-group"><input type="password" id="api-key-input" placeholder="sk-ant-..."><div class="form-hint">前往 console.anthropic.com 申請。此 Key 僅儲存在您的瀏覽器 localStorage，不會上傳。</div></div>
+          <button class="btn btn-primary btn-sm" onclick="App.saveApiKey()">儲存 API Key</button>
+          <span id="api-status" style="font-size:12px;color:var(--muted);margin-left:8px"></span></div>
+        <div class="card"><div class="card-title">關於離線模式</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.9">
+            本系統採用 PWA 技術，可安裝至桌面並離線使用。所有資料儲存於本機 IndexedDB，永不上傳。<br>
+            · 表單填寫、GHG 計算、合規檢查、Word 匯出：<strong style="color:var(--teal)">完全離線</strong><br>
+            · AI 智慧生成章節：需連線且填入 API Key（離線時自動切換為範本引擎）
+          </div></div>
+      </div>
+    </div>
+
+    <!-- 匯出 -->
+    <div id="page-export" class="page-content" style="display:none;flex-direction:column">
+      <div class="topbar"><div><div class="topbar-title">匯出永續報告書</div><div class="topbar-sub">前端生成 Word 檔，完全離線</div></div></div>
+      <div class="content">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">已完成章節</div><div class="metric-value" id="ex-done">0</div><div class="metric-sub">共 6 個</div></div>
+          <div class="metric"><div class="metric-label">合規通過率</div><div class="metric-value" id="ex-comp">—</div><div class="metric-sub">合規檢查</div></div>
+          <div class="metric"><div class="metric-label">適用階段</div><div class="metric-value" id="ex-reg" style="font-size:16px">—</div><div class="metric-sub">自動判斷</div></div></div>
+        <div class="card"><div class="card-title">報告書架構</div>
+          <div style="font-size:13px;line-height:2.2;color:var(--muted)">
+            第一章｜公司概況與報告範圍 <span class="tag tag-ifrs">S1</span><br>
+            第二章｜氣候治理 <span class="tag tag-tcfd">TCFD</span><span class="tag tag-ifrs">S2</span><br>
+            第三章｜氣候策略與財務影響 <span class="tag tag-tcfd">TCFD</span><span class="tag tag-ifrs">S2</span><br>
+            第四章｜風險管理 <span class="tag tag-tcfd">TCFD</span><span class="tag tag-ifrs">S2</span><br>
+            第五章｜氣候指標與目標 <span class="tag tag-tcfd">TCFD</span><span class="tag tag-ifrs">S2</span><span class="tag tag-sasb">SASB</span><br>
+            附錄 A｜GHG 排放明細 <span class="tag tag-env">環境部</span>　附錄 B｜SASB 指標對照 <span class="tag tag-sasb">SASB</span>
+          </div>
+          <div class="form-hint" style="margin-top:12px">未生成的章節將自動以離線範本補上。</div></div>
+        <div class="card"><div class="card-title">產出 Word 檔</div>
+          <button class="btn btn-primary" id="export-word-btn" onclick="App.exportWord()"><span class="ti">⬇</span> 匯出 Word 報告書</button>
+          <span id="export-status" style="font-size:13px;margin-left:12px"></span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="./storage.js"></script>
+<script src="./references.js"></script>
+<script src="./templates.js"></script>
+<script src="./practice-guide.js"></script>
+<script src="./docx-export.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
