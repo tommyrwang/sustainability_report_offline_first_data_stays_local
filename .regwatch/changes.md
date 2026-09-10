@@ -1,4 +1,4 @@
-# 法規檢索比對報告　2026-09-04 05:56
+# 法規檢索比對報告　2026-09-11 05:59
 
 ## ⚠️ 偵測到 7 項來源頁面變動
 
@@ -45,12 +45,11 @@
 - 命中關鍵字：氣候變遷因應法, 碳費, 淨零, 修正
 - 備註：碳費母法；碳費費率為子法
 
-### SASB 行業別準則
-- 主管機關：ISSB / SASB
-- 目前系統基準版本：2023-12 版
-- 來源：https://sasb.ifrs.org/standards/
-- 命中關鍵字：SASB
-- 備註：ISSB 持續進行 SASB 準則國際適用性修訂
+### IFRS S1 / S2 準則
+- 主管機關：ISSB
+- 目前系統基準版本：2023-06 發布
+- 來源：https://www.ifrs.org/issued-standards/ifrs-sustainability-standards-navigator/
+- 備註：後續 ISSB 新號準則（如自然相關）須追蹤
 
 ### 建議人工檢查的程式位置
 - `app.js` → `runCompliance()` 的 `items` 陣列（法規條號與檢核邏輯）
