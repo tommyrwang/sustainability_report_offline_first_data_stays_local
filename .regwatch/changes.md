@@ -1,6 +1,6 @@
-# 法規檢索比對報告　2026-09-11 05:59
+# 法規檢索比對報告　2026-09-18 06:28
 
-## ⚠️ 偵測到 7 項來源頁面變動
+## ⚠️ 偵測到 6 項來源頁面變動
 
 > 以下來源頁面內容自上次檢查後有變動，**請人工確認是否涉及系統需更新的實質法規異動**，
 > 確認後再手動調整程式（app.js 合規項目、templates.js 範本、references.js 版本日期）。
@@ -44,12 +44,6 @@
 - 來源：https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=O0020098
 - 命中關鍵字：氣候變遷因應法, 碳費, 淨零, 修正
 - 備註：碳費母法；碳費費率為子法
-
-### IFRS S1 / S2 準則
-- 主管機關：ISSB
-- 目前系統基準版本：2023-06 發布
-- 來源：https://www.ifrs.org/issued-standards/ifrs-sustainability-standards-navigator/
-- 備註：後續 ISSB 新號準則（如自然相關）須追蹤
 
 ### 建議人工檢查的程式位置
 - `app.js` → `runCompliance()` 的 `items` 陣列（法規條號與檢核邏輯）
