@@ -1,11 +1,11 @@
 {
-  "fsc_roadmap": "8341895620bf80a2567d6bf86c554c8f284ede68b65782bc571a21d18fcd4338",
-  "fsc_qa": "82f0b014de039b868336b55b7404279830968ed0b0128b4bf1f5ee20bfedd908",
+  "fsc_roadmap": "72021fca1051cb1b8b324530b03ee1368ef6ffcd69557cb27ceabc7d13746809",
+  "fsc_qa": "226980e0f414f9ab307d47e0dc27a384cee3513fef2cc11ad2e90d385d395053",
   "twse_guidance": "713fb105a8365c4a1afea86600b8903eefe4fcfe04e5a93f3ad4f13a0b036e96",
-  "annual_report_rules": "bd5d10138276a315112f58c94d695ce830e72730733d2a17f7b6b7d935f841c1",
-  "sustainability_report_rules": "208fa60f7fbc106793f5f4c4e2ef03081a4cf342c27fdf125fc86e3182a8364f",
-  "moenv_ghg_rules": "cd8b330599cec4591c5d532a1f331c1e36040438abebb8cef4ab75fd1366daa3",
-  "climate_act": "a8ef768e5b0576933912b07fa03e20aed513c102c08483a2505429a9c949dabc",
+  "annual_report_rules": "775b6ba3fed62e4b72c756de704a92430f672d66c68de060985933a2b1ed61cf",
+  "sustainability_report_rules": "1c4528b858c34e3b4d310fed8bfc4e6602dcf2a01ba3c6a201751b4722a7a375",
+  "moenv_ghg_rules": "1326ba2f2889fb78bb3ee5f4394bbcb585f721ab5f25ec3f3ddea65eefbdce8a",
+  "climate_act": "8dcd7ce4a9a72a6d2651295c4296a53294da2347267ad7e4540be2bb4d6a4add",
   "carbon_fee": "",
   "issb_standards": "1dae26f55fda8fd14ec86e41e82167f67126883ddb01ef20beb041f15937d794",
   "sasb_standards": "f29698455af0978882cdb2068cfd5506266850a085dd46a6ca5d80b942ecc7df"
